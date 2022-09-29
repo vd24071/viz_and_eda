@@ -1,5 +1,8 @@
 Visualization and EDA
 ================
+Vanessa Dinh
+
+## Let’s Import Data
 
 ``` r
 library(tidyverse)
@@ -18,7 +21,7 @@ library(tidyverse)
 library(ggridges)
 ```
 
-\#Example
+# Example
 
 ``` r
 weather_df = 
@@ -79,7 +82,7 @@ weather_df
     ## 10 CentralPark_NY USW00094728 2017-01-10     0   7.8  -6  
     ## # … with 1,085 more rows
 
-\#Basic scatterplot
+# Basic scatterplot
 
 ``` r
 ggplot(weather_df, aes(x = tmin, y = tmax))
@@ -95,3 +98,282 @@ ggplot(weather_df, aes(x = tmin, y = tmax)) +
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 ![](viz_eda_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
+weather_df %>%
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_point()
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+plot_weather = 
+  weather_df %>%
+  ggplot(aes(x = tmin, y = tmax)) 
+
+plot_weather + geom_point()
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+# Advanced Scatterplot
+
+``` r
+ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name))
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) +
+  geom_smooth(se = FALSE)
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 15 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = tmin, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  geom_smooth(se = FALSE) + 
+  facet_grid(. ~ name)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 15 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
+  geom_point(aes(size = prcp), alpha = .5) +
+  geom_smooth(se = FALSE) + 
+  facet_grid(. ~ name)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+# Learning Assessment
+
+``` r
+weather_df %>% 
+  filter(name == "CentralPark_NY") %>% 
+  mutate(
+    tmin_fahr = tmin * (9/5) + 32,
+    tmax_fahr = tmax * (9/5) + 32) %>% 
+  ggplot(aes(x = tmin_fahr, y = tmax_fahr)) +
+    geom_point(alpha = 0.5) +
+    geom_smooth(method = "lm", se = FALSE)
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+# Odds and Ends
+
+``` r
+ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
+  geom_smooth(se = FALSE) 
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = tmax, y = tmin)) + 
+  geom_hex()
+```
+
+    ## Warning: Removed 15 rows containing non-finite values (stat_binhex).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+``` r
+ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin), color = "blue")
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+``` r
+ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin, color = "blue"))
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-13-2.png)<!-- --> color =
+“blue” is outside of the aes() in the first and inside aes() in the
+second creating color to geom_point by hand in the first, creating a
+variable with the value “blue” in the second
+
+# Univariate plots …
+
+Histograms, barplots, boxplots, violins, …
+
+``` r
+ggplot(weather_df, aes(x = tmax)) + 
+  geom_histogram()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = tmax, fill = name)) + 
+  geom_histogram(position = "dodge", binwidth = 2)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-15-1.png)<!-- --> fill is
+better than color = for histograms “dodge” is better than default
+position
+
+``` r
+ggplot(weather_df, aes(x = tmax, fill = name)) + 
+  geom_density(alpha = .4, adjust = .5, color = "blue")
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+alpha codes for transparency
+
+``` r
+ggplot(weather_df, aes(x = name, y = tmax)) + geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = name, y = tmax)) + 
+  geom_violin(aes(fill = name), alpha = .5) + 
+  stat_summary(fun = "median", color = "blue")
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_summary).
+
+    ## Warning: Removed 3 rows containing missing values (geom_segment).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = tmax, y = name)) + 
+  geom_density_ridges(scale = .85)
+```
+
+    ## Picking joint bandwidth of 1.84
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-19-1.png)<!-- --> \# Learning
+Assessment
+
+``` r
+ggplot(weather_df, aes(x = prcp, fill = name)) +
+  geom_histogram(position = "dodge", binwidth = 10)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = prcp)) +
+  geom_density(aes(fill = name), alpha = .5)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(x = prcp, y = name)) + 
+  geom_density_ridges(scale = .85)
+```
+
+    ## Picking joint bandwidth of 4.61
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+
+``` r
+ggplot(weather_df, aes(y = prcp, x = name)) + 
+  geom_boxplot() 
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-23-1.png)<!-- --> \# Saving
+and Embedding Plots
+
+``` r
+weather_plot = ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) 
+
+ggsave("weather_plot.pdf", weather_plot, width = 8, height = 5)
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+``` r
+weather_plot
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](viz_eda_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+
+``` r
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+```
+
+``` r
+ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name))
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="viz_eda_files/figure-gfm/unnamed-chunk-26-1.png" width="90%" />
