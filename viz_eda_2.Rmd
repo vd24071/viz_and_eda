@@ -1,0 +1,12 @@
+---
+title = "Visualization with ggplot2"
+author = Vanessa Dinh
+date = 10/4/22
+output = github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
